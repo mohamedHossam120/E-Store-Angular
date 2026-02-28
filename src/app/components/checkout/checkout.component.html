@@ -1,0 +1,49 @@
+<div class="container my-5 min-vh-100 d-flex justify-content-center align-items-center">
+  <div class="card shadow-sm border-info-subtle p-4 rounded-4" style="max-width: 500px; width: 100%;">
+    
+    <div class="text-center mb-4">
+      <div class="bg-info-subtle d-inline-block p-3 rounded-circle mb-3">
+        <i class="bi bi-credit-card-2-front text-info fs-1"></i>
+      </div>
+      <h3 class="fw-bold text-dark">Secure Checkout</h3>
+      <p class="text-muted small">Choose your shipping location to pay via Stripe</p>
+    </div>
+
+    <form [formGroup]="shippingForm" (ngSubmit)="handleForm()">
+      <div class="mb-3">
+        <label class="form-label small fw-bold text-muted">Address Details</label>
+        <input formControlName="details" type="text" 
+               class="form-control border-info-subtle rounded-3" 
+               [class.is-invalid]="shippingForm.get('details')?.errors && shippingForm.get('details')?.touched"
+               placeholder="Street, Building, Floor...">
+        <div class="invalid-feedback extra-small">Address is too short (min 5 characters).</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-bold text-muted">Phone Number</label>
+        <input formControlName="phone" type="tel" 
+               class="form-control border-info-subtle rounded-3"
+               [class.is-invalid]="shippingForm.get('phone')?.errors && shippingForm.get('phone')?.touched"
+               placeholder="Your Phone">
+        <div class="invalid-feedback extra-small">Please enter a valid Egyptian phone number.</div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label small fw-bold text-muted">City</label>
+        <input formControlName="city" type="text" 
+               class="form-control border-info-subtle rounded-3"
+               [class.is-invalid]="shippingForm.get('city')?.errors && shippingForm.get('city')?.touched"
+               placeholder="e.g. Cairo, Giza">
+      </div>
+
+      <button [disabled]="shippingForm.invalid || isLoading" 
+              class="btn btn-info text-white w-100 rounded-pill py-2 fw-bold mt-3 shadow-sm transition-all">
+        @if (isLoading) {
+          <span class="spinner-border spinner-border-sm me-2"></span> Redirecting to Stripe...
+        } @else {
+          Proceed to Online Payment <i class="bi bi-arrow-right-short fs-5 align-middle"></i>
+        }
+      </button>
+    </form>
+  </div>
+</div>

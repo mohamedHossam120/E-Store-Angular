@@ -1,0 +1,71 @@
+<div class="container my-5 min-vh-100">
+  <div class="d-flex align-items-center mb-5 pb-3 border-bottom border-info border-2">
+    <i class="bi bi-receipt-cutoff fs-2 text-info me-2"></i>
+    <h3 class="fw-bold m-0">My Orders</h3>
+  </div>
+
+  <div class="row g-4">
+    @if (isLoading) {
+      @for (i of [1,2,3]; track $index) {
+        <div class="col-12">
+          <div class="card border-0 shadow-sm p-4 bg-white rounded-4 overflow-hidden skeleton-loader">
+            <div class="skeleton-shimmer"></div>
+          </div>
+        </div>
+      }
+    } @else {
+      @for (order of allOrders; track order.id) {
+        <div class="col-12">
+          <div class="card shadow-sm border-info-subtle rounded-4 transition-card bg-white overflow-hidden">
+            <div class="card-body p-0">
+              <div class="row g-0">
+                <div class="col-lg-8 p-4 border-end-md">
+                  <div class="d-flex justify-content-between align-items-start mb-3">
+                    <div>
+                      <h6 class="text-muted small mb-0"><i class="bi bi-calendar-event me-1"></i> {{order.createdAt | date:'mediumDate'}}</h6>
+                    </div>
+                    <span class="badge rounded-pill px-3 py-2" 
+                          [class.bg-success-subtle]="order.isPaid" [class.text-success]="order.isPaid"
+                          [class.bg-warning-subtle]="!order.isPaid" [class.text-warning]="!order.isPaid">
+                      {{ order.isPaid ? 'Paid' : 'Pending Payment' }}
+                    </span>
+                  </div>
+
+                  <div class="d-flex flex-wrap gap-2 mt-3">
+                    @for (item of order.cartItems; track item._id) {
+                      <div class="product-thumb-sm position-relative">
+                        <img [src]="item.product.imageCover" class="rounded-3 border" [alt]="item.product.title">
+                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-info extra-small shadow-sm">
+                          {{item.count}}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <div class="col-lg-4 p-4 bg-light-secondary d-flex flex-column justify-content-center align-items-md-end text-md-end">
+                  <p class="text-muted small mb-1">Total Order Price</p>
+                  <h3 class="text-info fw-bold mb-3">{{order.totalOrderPrice | number}} EGP</h3>
+                  
+                  <div class="d-flex flex-wrap gap-2 justify-content-md-end">
+                    <span class="badge bg-light-cyan text-info rounded-pill px-3 py-2 border border-info-subtle">
+                      <i class="bi bi-truck me-1"></i> Out for delivery
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="col-12 text-center py-5">
+          <div class="bg-light-cyan d-inline-block p-4 rounded-circle mb-3">
+            <i class="bi bi-cart-x display-1 text-info"></i>
+          </div>
+          <h4 class="text-muted">You haven't placed any orders yet.</h4>
+          <button routerLink="/home" class="btn btn-info text-white mt-3 rounded-pill px-5 py-2">Start Shopping</button>
+        </div>
+      }
+    }
+  </div>
+</div>

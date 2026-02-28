@@ -1,0 +1,44 @@
+<section class="p-5 shadow my-4 w-75 mx-auto rounded bg-light">
+  <h1 class="h2 text-primary fw-bold mb-4">Register Now:</h1>
+
+  @if (msgError) {
+    <div class="alert alert-danger p-2 small animate__animated animate__fadeIn">
+      {{ msgError }}
+    </div>
+  }
+
+  <form [formGroup]="registerForm" (ngSubmit)="submitRegister()">
+    
+    <div class="mb-3">
+      <label for="name" class="form-label">Name:</label>
+      <input formControlName="name" type="text" id="name" class="form-control" [class.is-invalid]="registerForm.get('name')?.errors && registerForm.get('name')?.touched">
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email:</label>
+      <input formControlName="email" type="email" id="email" class="form-control" [class.is-invalid]="registerForm.get('email')?.errors && registerForm.get('email')?.touched">
+    </div>
+
+    <div class="mb-3">
+      <label for="password" class="form-label">Password:</label>
+      <input formControlName="password" type="password" id="password" class="form-control" [class.is-invalid]="registerForm.get('password')?.errors && registerForm.get('password')?.touched">
+    </div>
+
+    <div class="mb-3">
+      <label for="rePassword" class="form-label">rePassword:</label>
+      <input formControlName="rePassword" type="password" id="rePassword" class="form-control" [class.is-invalid]="(registerForm.get('rePassword')?.errors || registerForm.getError('mismatch')) && registerForm.get('rePassword')?.touched">
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone:</label>
+      <input formControlName="phone" type="tel" id="phone" class="form-control" [class.is-invalid]="registerForm.get('phone')?.errors && registerForm.get('phone')?.touched">
+    </div>
+
+    <button [disabled]="registerForm.invalid || isLoading" type="submit" class="btn btn-primary d-block ms-auto mt-4 px-4 py-2 rounded-pill shadow-sm">
+      @if (isLoading) {
+        <i class="fas fa-spinner fa-spin me-2"></i>
+      } 
+      Register
+    </button>
+  </form>
+</section>

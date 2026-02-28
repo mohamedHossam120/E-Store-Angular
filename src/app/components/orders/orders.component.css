@@ -1,0 +1,50 @@
+/* الأكواد الخاصة بكِ */
+.bg-light-cyan { background-color: #e0f7fa !important; }
+.bg-light-secondary { background-color: #f8f9fa !important; }
+.border-info-subtle { border-color: #b2ebf2 !important; }
+
+.product-thumb-sm img {
+    width: 50px; height: 50px; object-fit: cover; transition: transform 0.2s ease;
+}
+.product-thumb-sm:hover img { transform: scale(1.1); }
+.extra-small { font-size: 0.7rem; padding: 0.25em 0.5em; }
+
+.transition-card {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-width: 1px;
+}
+.transition-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0, 188, 212, 0.08) !important;
+    border-color: #0dcaf0 !important;
+}
+
+/* التنسيق المتجاوب للـ Border */
+@media (min-width: 992px) {
+    .border-end-md { border-right: 1px solid #dee2e6 !important; padding-right: 1rem; }
+}
+@media (max-width: 991px) {
+    .border-end-md { border-bottom: 1px solid #dee2e6; padding-bottom: 15px; }
+}
+
+/* كود الـ Skeleton */
+.skeleton-loader {
+    height: 180px;
+    background: #f6f7f8;
+    position: relative;
+}
+.skeleton-shimmer {
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, #f6f7f8 0%, #edeef1 50%, #f6f7f8 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+}
+@keyframes shimmer {
+    to { background-position-x: -200%; }
+}
+
+/* ألوان الـ Badges الهادية */
+.bg-success-subtle { background-color: #d1e7dd !important; }
+.text-success { color: #0f5132 !important; }
+.bg-warning-subtle { background-color: #fff3cd !important; }
+.text-warning { color: #664d03 !important; }

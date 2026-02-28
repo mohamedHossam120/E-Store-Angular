@@ -1,0 +1,85 @@
+<div class="container my-5">
+  <div class="row justify-content-center mb-5">
+    <div class="col-md-8">
+      <div class="search-box position-relative">
+        <i class="bi bi-search position-absolute top-50 start-0 translate-middle-y ms-3 text-info fs-5"></i>
+        <input [(ngModel)]="text" type="text" class="form-control form-control-lg rounded-pill border-2 border-info-subtle shadow-sm ps-5 py-2" placeholder="Search for your favorite products...">
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-4">
+    @if (isLoading) {
+      @for (i of [1,2,3,4,5,6,7,8]; track $index) {
+        <div class="col-md-3">
+          <div class="skeleton-card p-3 border-0 shadow-sm rounded-4 bg-white">
+            <div class="skeleton-img mb-3"></div>
+            <div class="skeleton-text skeleton-title mb-2"></div>
+            <div class="skeleton-text skeleton-subtitle mb-3"></div>
+            <div class="d-flex justify-content-between mt-auto">
+              <div class="skeleton-text skeleton-price"></div>
+              <div class="skeleton-text skeleton-rating"></div>
+            </div>
+            <div class="skeleton-btn mt-3"></div>
+          </div>
+        </div>
+      }
+    } @else {
+      @for (product of productList | search : text; track product.id) {
+        <div class="col-md-3">
+          <div class="card h-100 shadow-sm border-0 product-card p-3 position-relative overflow-hidden">
+            <button (click)="toggleWishlist(product.id)" class="btn position-absolute top-0 end-0 m-2 border-0 bg-white shadow-sm rounded-circle p-2 z-3">
+              <i class="bi bi-heart-fill fs-5 transition-icon"
+                 [class.text-danger]="wishlistData.includes(product.id)"
+                 [class.text-muted]="!wishlistData.includes(product.id)">
+              </i>
+            </button>
+            
+            <div class="image-wrapper rounded-3 mb-3 overflow-hidden" [routerLink]="['/details', product.id]" style="cursor:pointer;">
+              <img [src]="product.imageCover" class="card-img-top w-100 h-100 object-fit-cover transition-img" [alt]="product.title">
+            </div>
+            
+            <div class="card-body d-flex flex-column p-0">
+              <div [routerLink]="['/details', product.id]" style="cursor:pointer;">
+                  <h6 class="text-info small fw-bold mb-1">{{product.category.name}}</h6>
+                  <h5 class="card-title h6 fw-bold text-dark mb-3">{{product.title.split(' ').slice(0, 2).join(' ')}}</h5>
+              </div>
+              <div class="d-flex justify-content-between align-items-center mt-auto">
+                <span class="fw-bolder text-dark fs-5">{{product.price}} EGP</span>
+                <span class="badge bg-light text-dark border p-2 rounded-pill">
+                  <i class="bi bi-star-fill text-warning me-1"></i> {{product.ratingsAverage}}
+                </span>
+              </div>
+              <button (click)="addToCart(product.id)" class="btn btn-info text-white w-100 mt-3 py-2 rounded-3 shadow-sm border-0 fw-bold">
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </div>
+      } @empty {
+        <div class="col-12 text-center my-5">
+          <i class="bi bi-search text-info-subtle display-1"></i>
+          <p class="text-muted fs-4 mt-3">No products found for "{{text}}"</p>
+        </div>
+      }
+    }
+  </div>
+
+  @if (!text && !isLoading && productList.length > 0) {
+    <nav class="mt-5 d-flex justify-content-center">
+      <ul class="pagination shadow-sm">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link cursor-pointer" (click)="getProductsPage(currentPage - 1)">Previous</button>
+        </li>
+        @for (page of pagesArray; track $index) {
+          <li class="page-item" [class.active]="page === currentPage">
+            <button class="page-link cursor-pointer" [class.bg-info]="page === currentPage" (click)="getProductsPage(page)">{{ page }}</button>
+          </li>
+        }
+        <li class="page-item" [class.disabled]="currentPage === numberOfPages">
+          <button class="page-link cursor-pointer" (click)="getProductsPage(currentPage + 1)">Next</button>
+        </li>
+      </ul>
+    </nav>
+  }
+</div>

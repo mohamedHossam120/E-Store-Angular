@@ -1,0 +1,152 @@
+/* الكارت */
+.product-card {
+  transition: all 0.4s ease-in-out;
+  border-radius: 20px;
+  background-color: #fff;
+  border: 1px solid transparent !important;
+}
+
+.product-card:hover {
+  transform: translateY(-10px);
+  border-color: #0d6efd !important; /* إطار أزرق خفيف عند الوقوف */
+  box-shadow: 0 15px 30px rgba(13, 110, 253, 0.1) !important;
+}
+
+/* تكبير الصورة */
+.image-wrapper {
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #fcfcfc;
+  overflow: hidden;
+}
+
+.image-wrapper img {
+  object-fit: contain;
+  transition: transform 0.5s ease;
+  padding: 10px;
+}
+
+.product-card:hover .image-wrapper img {
+  transform: scale(1.1);
+}
+
+/* أيقونة القلب */
+.wishlist-icon {
+  background-color: #fff;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  z-index: 5;
+}
+
+/* الزر الأزرق */
+.btn-primary {
+  background-color: #0d6efd !important;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0b5ed7 !important;
+}
+
+/* Pagination */
+.pagination .page-link {
+  color: #0d6efd;
+  border-radius: 10px !important;
+  margin: 0 4px;
+  border: 1px solid #dee2e6;
+  padding: 8px 16px;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #0d6efd !important;
+  border-color: #0d6efd !important;
+  color: white !important;
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #6c757d;
+}
+.product-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+.transition-img {
+    transition: transform 0.5s ease;
+}
+.product-card:hover .transition-img {
+    transform: scale(1.1);
+}
+.wishlist-btn {
+    transition: transform 0.2s ease;
+}
+.wishlist-btn:active {
+    transform: scale(0.8);
+}
+.cursor-pointer {
+    cursor: pointer;
+}
+/* لون الصفحة الفعالة في الـ Pagination */
+.page-item.active .page-link {
+    background-color: #0aad0a; /* أو لون الـ main بتاعك */
+    border-color: #0aad0a;
+}
+/* Skeleton Animation */
+.skeleton-card {
+  pointer-events: none;
+  background: #fff;
+}
+
+.skeleton-img, .skeleton-text, .skeleton-btn {
+  background: #eee;
+  background: linear-gradient(110deg, #ececec 8%, #f5f5f5 18%, #ececec 33%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+  border-radius: 8px;
+}
+
+@keyframes shimmer {
+  to {
+    background-position-x: -200%;
+  }
+}
+
+.skeleton-img {
+  height: 200px;
+  width: 100%;
+}
+
+.skeleton-title {
+  height: 20px;
+  width: 70%;
+}
+
+.skeleton-subtitle {
+  height: 15px;
+  width: 40%;
+}
+
+.skeleton-price {
+  height: 25px;
+  width: 30%;
+}
+
+.skeleton-rating {
+  height: 25px;
+  width: 20%;
+  border-radius: 20px;
+}
+
+.skeleton-btn {
+  height: 40px;
+  width: 100%;
+  border-radius: 8px;
+}

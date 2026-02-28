@@ -1,0 +1,66 @@
+<div class="container my-5 min-vh-100">
+  <div class="d-flex align-items-center mb-5 pb-2 border-bottom border-info border-2">
+    <i class="bi bi-heart-fill fs-2 text-danger me-2"></i>
+    <h3 class="fw-bold m-0 text-dark">My Wishlist</h3>
+  </div>
+
+  @if (!isLoaded) {
+    <div class="row g-4">
+      @for (i of [1,2,3]; track $index) {
+        <div class="col-12 border-0 bg-light rounded-4 mb-3 position-relative overflow-hidden" style="height: 140px;">
+          <div class="skeleton-shimmer"></div>
+        </div>
+      }
+    </div>
+  } 
+
+  @else {
+    
+    @if (wishlistDetails.length > 0) {
+      <div class="row g-3">
+        @for (product of wishlistDetails; track product.id) {
+          <div class="col-12">
+            <div class="card shadow-sm border-0 border-start border-5 border-info rounded-4 p-3 transition-card bg-white">
+              <div class="row align-items-center">
+                <div class="col-md-2 col-4 text-center">
+                  <img [src]="product.imageCover" class="img-fluid rounded-3 shadow-xs" [alt]="product.title" style="max-height: 100px;">
+                </div>
+                <div class="col-md-7 col-8">
+                  <h5 class="fw-bold mb-1 text-dark">{{product.title.split(' ').slice(0, 5).join(' ')}}</h5>
+                  <p class="text-info fw-bold mb-3 fs-5">{{product.price}} EGP</p>
+                  
+                  <button (click)="removeItem(product.id)" class="btn btn-link text-danger p-0 text-decoration-none fw-medium shadow-none">
+                    @if (loadings.includes(product.id)) {
+                      <span class="spinner-border spinner-border-sm me-1"></span>
+                    } @else {
+                      <i class="bi bi-trash3-fill me-1"></i>
+                    }
+                    Remove Item
+                  </button>
+                </div>
+                <div class="col-md-3 text-md-end mt-3 mt-md-0">
+                  <button (click)="addToCart(product.id)" class="btn btn-info text-white rounded-pill px-4 py-2 fw-bold shadow-sm">
+                    Add To Cart <i class="bi bi-cart-plus-fill ms-1"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    } 
+    
+    @else {
+      <div class="text-center py-5 mt-5 animate__animated animate__fadeIn">
+        <div class="bg-light-cyan d-inline-block p-5 rounded-circle mb-4 shadow-sm">
+            <i class="bi bi-heartbreak display-1 text-info opacity-50"></i>
+        </div>
+        <h3 class="fw-bold text-dark">Your wishlist is empty</h3>
+        <p class="text-muted fs-5">Seems like you haven't added anything yet.</p>
+        <button routerLink="/home" class="btn btn-info text-white mt-3 rounded-pill px-5 py-2 fw-bold shadow-sm">
+            Browse Products
+        </button>
+      </div>
+    }
+  }
+</div>
