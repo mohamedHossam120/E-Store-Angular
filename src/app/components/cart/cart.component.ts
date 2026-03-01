@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CartService } from '../../core/services/auth/cart.service';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-
+import { ToastrService } from 'ngx-toastr'; 
 @Component({
   selector: 'app-cart',
   standalone: true,
@@ -12,16 +12,19 @@ import { RouterLink } from '@angular/router';
 })
 export class CartComponent implements OnInit {
   cartDetails: any = null;
-  isLoading: boolean = true; // خليها true في البداية عشان الـ HTML يعرف إننا بنحمل
+  isLoading: boolean = true;
+  
+  itemLoadings: string[] = []; 
 
-  constructor(private _cartService: CartService) {}
+  private readonly _cartService = inject(CartService);
+  private readonly _toastr = inject(ToastrService);
 
   ngOnInit(): void {
     this.getCartData();
   }
 
   getCartData(): void {
-    this.isLoading = true; // تأكيد التشغيل
+    this.isLoading = true;
     this._cartService.getLoggedUserCart().subscribe({
       next: (res: any) => {
         if (res && res.data) {
@@ -29,23 +32,29 @@ export class CartComponent implements OnInit {
         } else {
           this.cartDetails = null; 
         }
-        this.isLoading = false; // اقفل اللودر هنا
+        this.isLoading = false;
       },
       error: (err) => {
         console.error(err);
         this.cartDetails = null;
-        this.isLoading = false; // اقفل اللودر حتى في الخطأ
+        this.isLoading = false;
       }
     });
   }
 
   deleteItem(id: string): void {
+    this.itemLoadings.push(id); 
     this._cartService.removeItem(id).subscribe({
       next: (res) => {
         this.cartDetails = res.data;
         this._cartService.cartNumber.next(res.numOfCartItems);
+        this.itemLoadings = this.itemLoadings.filter(item => item !== id); 
+        this._toastr.warning('Product removed from your cart', 'Cart');
       },
-      error: (err) => console.log(err)
+      error: (err) => {
+        console.log(err);
+        this.itemLoadings = this.itemLoadings.filter(item => item !== id);
+      }
     });
   }
 
@@ -54,12 +63,19 @@ export class CartComponent implements OnInit {
       this.deleteItem(id);
       return;
     }
+
+    this.itemLoadings.push(id); 
     this._cartService.updateProductCount(id, count).subscribe({
       next: (res) => {
         this.cartDetails = res.data;
         this._cartService.cartNumber.next(res.numOfCartItems);
+        this.itemLoadings = this.itemLoadings.filter(item => item !== id);
+        this._toastr.success('Quantity updated successfully', 'Cart');
       },
-      error: (err) => console.log(err)
+      error: (err) => {
+        console.log(err);
+        this.itemLoadings = this.itemLoadings.filter(item => item !== id);
+      }
     });
   }
 
@@ -70,6 +86,7 @@ export class CartComponent implements OnInit {
         if (res.message === 'success') {
           this.cartDetails = null;
           this._cartService.cartNumber.next(0);
+          this._toastr.error('Your cart is now empty', 'Cart');
         }
         this.isLoading = false;
       },
