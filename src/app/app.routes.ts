@@ -47,13 +47,11 @@ export const routes: Routes = [
     title: 'My Orders' 
   },
 
-  // 4. صفحات الـ Authentication (Loged Guard) - ممنوع يدخلها لو هو عامل Login فعلاً
   { path: 'login', component: LoginComponent, canActivate: [logedGuard], title: 'Login' },
   { path: 'register', component: RegisterComponent, canActivate: [logedGuard], title: 'Register' },
   { path: 'forgot-password', component: FotgotPasswordComponent, canActivate: [logedGuard], title: 'Forgot Password' },
   { path: 'reset-password', component: ResetPasswordComponent, canActivate: [logedGuard], title: 'Reset Password' },
   { path: 'verify-code', component: VerifyCodeComponent, canActivate: [logedGuard], title: 'Verify Identity' },
 
-  // 5. صفحة الخطأ (Wildcard) - دايماً في الآخر
   { path: '**', component: NotFoundComponent, title: 'Page Not Found' } 
 ];
