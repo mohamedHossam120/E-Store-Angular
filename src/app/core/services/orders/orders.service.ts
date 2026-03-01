@@ -15,8 +15,11 @@ export class OrdersService {
   }
 
   checkoutSession(cartId: string, shippingData: object): Observable<any> {
+  
+    const currentOrigin = window.location.origin;
+
     return this._httpClient.post(
-      `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=http://localhost:4200`,
+      `https://ecommerce.routemisr.com/api/v1/orders/checkout-session/${cartId}?url=${currentOrigin}`,
       { shippingAddress: shippingData },
       { headers: this.getHeaders() } 
     );

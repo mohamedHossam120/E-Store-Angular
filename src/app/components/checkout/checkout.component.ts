@@ -20,7 +20,6 @@ export class CheckoutComponent implements OnInit {
     private _ordersService: OrdersService
   ) {}
 
-  // تعريف الفورم مع الـ Validation زي الـ Zod في Next.js
   shippingForm: FormGroup = new FormGroup({
     details: new FormControl(null, [Validators.required, Validators.minLength(5)]),
     phone: new FormControl(null, [Validators.required, Validators.pattern(/^01[0125][0-9]{8}$/)]),
@@ -28,7 +27,6 @@ export class CheckoutComponent implements OnInit {
   });
 
   ngOnInit(): void {
-    // جلب الـ cartId من الـ URL (المسار: checkout/:id)
     this._activatedRoute.paramMap.subscribe(params => {
       this.cartId = params.get('id');
     });
@@ -38,11 +36,9 @@ export class CheckoutComponent implements OnInit {
     if (this.shippingForm.valid && this.cartId) {
       this.isLoading = true;
       
-      // هنا بننادي الـ checkoutSession بتاع الـ Stripe (Online Payment)
       this._ordersService.checkoutSession(this.cartId, this.shippingForm.value).subscribe({
         next: (res) => {
           if (res.status === 'success') {
-            // توجيه المستخدم لصفحة Stripe فوراً في نفس التابة
             window.location.href = res.session.url;
           }
         },
