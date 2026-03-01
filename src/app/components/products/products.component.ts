@@ -3,10 +3,10 @@ import { ProductsService } from '../../core/services/products/products.service';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { CartService } from '../../core/services/auth/cart.service'; 
 import { WishlistService } from '../../core/services/wishlist/wishlist.service'; 
-import { RouterLink } from '@angular/router'; 
+import { Router, RouterLink } from '@angular/router'; 
 import { FormsModule } from '@angular/forms'; 
 import { SearchPipe } from '../../core/Pipes/search.pipe';
-import { ToastrService } from 'ngx-toastr'; // أضفت التوستر للرسائل
+import { ToastrService } from 'ngx-toastr'; 
 
 @Component({
   selector: 'app-products',
@@ -23,7 +23,6 @@ export class ProductsComponent implements OnInit {
   text: string = '';
   isLoading: boolean = true;
 
-  // مصفوفات لمتابعة عمليات التحميل لكل منتج بشكل منفصل
   cartLoadings: string[] = []; 
   wishlistLoadings: string[] = [];
 
@@ -31,13 +30,14 @@ export class ProductsComponent implements OnInit {
     private _productsService: ProductsService,
     private _cartService: CartService,
     private _wishlistService: WishlistService,
-    private _toastr: ToastrService, // حقن التوستر
+    private _toastr: ToastrService,
+    private _router: Router, // حقن الـ Router هنا
     @Inject(PLATFORM_ID) private platformId: object 
   ) {}
 
   ngOnInit(): void {
     this.getProductsPage(1);
-    if (isPlatformBrowser(this.platformId)) {
+    if (isPlatformBrowser(this.platformId) && localStorage.getItem('userToken') !== null) {
       this.loadWishlist();
     }
   }
@@ -67,7 +67,7 @@ export class ProductsComponent implements OnInit {
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }
       },
-      error: (err) => {
+      error: () => {
         this.isLoading = false;
       }
     });
@@ -77,16 +77,23 @@ export class ProductsComponent implements OnInit {
     return Array.from({ length: this.numberOfPages }, (_, i) => i + 1);
   }
 
-  // إضافة للسلة مع Loading
   addToCart(id: string): void {
-    this.cartLoadings.push(id); // ابدأ التحميل للزر ده
+    if (isPlatformBrowser(this.platformId)) {
+      if (localStorage.getItem('userToken') === null) {
+        this._toastr.info('Please login first', 'E-Store');
+        this._router.navigate(['/login']);
+        return; 
+      }
+    }
+
+    this.cartLoadings.push(id); 
     this._cartService.addToCart(id).subscribe({
       next: (res) => {
         if (res) {
           this._cartService.cartNumber.next(res.numOfCartItems);
-          this._toastr.success(res.message, 'Cart'); // تنبيه نجاح
+          this._toastr.success(res.message, 'Cart');
         }
-        this.cartLoadings = this.cartLoadings.filter(item => item !== id); // وقف التحميل
+        this.cartLoadings = this.cartLoadings.filter(item => item !== id);
       },
       error: () => {
         this.cartLoadings = this.cartLoadings.filter(item => item !== id);
@@ -94,10 +101,17 @@ export class ProductsComponent implements OnInit {
     });
   }
 
-  // تبديل المفضلة مع Loading للقلب
   toggleWishlist(id: string): void {
+    if (isPlatformBrowser(this.platformId)) {
+      if (localStorage.getItem('userToken') === null) {
+        this._toastr.info('Please login first', 'E-Store');
+        this._router.navigate(['/login']);
+        return;
+      }
+    }
+
     const isInWishlist = this.wishlistData.includes(id);
-    this.wishlistLoadings.push(id); // ابدأ التحميل للقلب ده
+    this.wishlistLoadings.push(id); 
 
     const action = isInWishlist 
       ? this._wishlistService.removeFromWishlist(id) 
@@ -107,7 +121,7 @@ export class ProductsComponent implements OnInit {
       next: (res) => {
         if (res && res.data) {
           this.wishlistData = res.data;
-          this._toastr.info(res.message, 'Wishlist'); // تنبيه
+          this._toastr.info(res.message, 'Wishlist');
         }
         this.wishlistLoadings = this.wishlistLoadings.filter(item => item !== id);
       },
